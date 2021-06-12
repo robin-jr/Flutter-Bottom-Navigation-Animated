@@ -16,8 +16,11 @@ class UpperCircle extends StatefulWidget {
 class UpperCircleState extends State<UpperCircle>
     with TickerProviderStateMixin {
   late SpringSimulation simulation;
+  late SpringSimulation simulation2;
   late AnimationController controller;
+  late AnimationController controller2;
   double _position = 15;
+  double _position2 = 15;
   static bool isFirst = true;
   @override
   void initState() {
@@ -28,16 +31,33 @@ class UpperCircleState extends State<UpperCircle>
         stiffness: 100.0,
         damping: 5.0,
       ),
-      0.0,
-      15.0,
+      0.1,
+      10.0,
       -400.0,
     );
 
     controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 700))
+        vsync: this, duration: const Duration(milliseconds: 1000))
       ..addListener(() {
         setState(() {
           _position = simulation.x(controller.value);
+        });
+      });
+    simulation2 = SpringSimulation(
+      const SpringDescription(
+        mass: 1.0,
+        stiffness: 100.0,
+        damping: 5.0,
+      ),
+      0.1,
+      15.0,
+      400.0,
+    );
+    controller2 = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1000))
+      ..addListener(() {
+        setState(() {
+          _position2 = simulation2.x(controller.value);
         });
       });
   }
@@ -46,7 +66,9 @@ class UpperCircleState extends State<UpperCircle>
   Widget build(BuildContext context) {
     if (isFirst) {
       controller.reset();
+      controller2.reset();
       controller.forward();
+      controller2.forward();
       isFirst = false;
     }
     return IgnorePointer(
@@ -62,27 +84,27 @@ class UpperCircleState extends State<UpperCircle>
               SizedBox(
                 height: 90,
                 width: 90,
-                // child: ClipRect(
-                //     clipper: HalfClipper(),
-                //     child: Container(
-                //       child: Center(
-                //         child: Container(
-                //             width: 70,
-                //             height: 70,
-                //             decoration: BoxDecoration(
-                //                 color: Colors.white,
-                //                 shape: BoxShape.circle,
-                //                 boxShadow: [
-                //                   BoxShadow(
-                //                       color: Colors.black12, blurRadius: 8)
-                //                 ])),
-                //       ),
-                //     )),
+                child: ClipRect(
+                    clipper: HalfClipper(),
+                    child: Container(
+                      child: Center(
+                        child: Container(
+                            width: 2 * _position2.abs(),
+                            height: 5 * _position2.abs(),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black12, blurRadius: 8)
+                                ])),
+                      ),
+                    )),
               ),
               Positioned(
-                bottom: _position - 25,
+                // bottom: _position - 25,
                 child: SizedBox(
-                    height: 90,
+                    height: 60,
                     width: 90,
                     child: CustomPaint(
                       painter: HalfPainter(),
