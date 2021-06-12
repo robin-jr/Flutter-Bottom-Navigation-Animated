@@ -148,6 +148,7 @@ class _FancyTabBarState extends State<FancyTabBar>
   }
 
   _initAnimationAndStart(double from, double to) {
+    UpperCircleState.isFirst = true;
     _positionTween.begin = from;
     _positionTween.end = to;
 
