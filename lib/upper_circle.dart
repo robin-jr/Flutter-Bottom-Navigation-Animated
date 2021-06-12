@@ -1,4 +1,3 @@
-// ignore: file_names, file_names
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:vector_math/vector_math.dart' as vector;

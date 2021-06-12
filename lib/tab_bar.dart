@@ -10,15 +10,10 @@ class FancyTabBar extends StatefulWidget {
 class _FancyTabBarState extends State<FancyTabBar>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
-  late Tween<double> _positionTween;
-  late Animation<double> _positionAnimation;
 
   late AnimationController _fadeOutController;
   late Animation<double> _fadeFabOutAnimation;
   late Animation<double> _fadeFabInAnimation;
-  late Animation<Offset> _slideDownAnimation;
-  late Animation<Offset> _slideUpAnimation;
-  late AnimationController _controller;
 
   double fabIconAlpha = 1;
   IconData nextIcon = Icons.search;
@@ -34,13 +29,6 @@ class _FancyTabBarState extends State<FancyTabBar>
         vsync: this, duration: Duration(milliseconds: ANIM_DURATION));
     _fadeOutController = AnimationController(
         vsync: this, duration: Duration(milliseconds: (ANIM_DURATION ~/ 5)));
-
-    _positionTween = Tween<double>(begin: 0, end: 0);
-    _positionAnimation = _positionTween.animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeOut))
-      ..addListener(() {
-        setState(() {});
-      });
 
     _fadeFabOutAnimation = Tween<double>(begin: 1, end: 0).animate(
         CurvedAnimation(parent: _fadeOutController, curve: Curves.easeOut))
@@ -66,25 +54,6 @@ class _FancyTabBarState extends State<FancyTabBar>
           fabIconAlpha = _fadeFabInAnimation.value;
         });
       });
-
-    _controller = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    )..forward();
-    _slideDownAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.0),
-      end: const Offset(0, -1.0),
-    ).animate(CurvedAnimation(
-      curve: Curves.easeInCubic,
-      parent: _animationController,
-    ));
-    _slideUpAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.0),
-      end: const Offset(0, 0.0),
-    ).animate(CurvedAnimation(
-      curve: Curves.easeInCubic,
-      parent: _animationController,
-    ));
   }
 
   @override
@@ -112,7 +81,7 @@ class _FancyTabBarState extends State<FancyTabBar>
                       nextIcon = Icons.home;
                       currentSelected = 0;
                     });
-                    _initAnimationAndStart(_positionAnimation.value, -1);
+                    _initAnimationAndStart();
                   }),
               TabItem(
                   selected: currentSelected == 1,
@@ -123,7 +92,7 @@ class _FancyTabBarState extends State<FancyTabBar>
                       nextIcon = Icons.search;
                       currentSelected = 1;
                     });
-                    _initAnimationAndStart(_positionAnimation.value, 0);
+                    _initAnimationAndStart();
                   }),
               TabItem(
                   selected: currentSelected == 2,
@@ -134,7 +103,7 @@ class _FancyTabBarState extends State<FancyTabBar>
                       nextIcon = Icons.person;
                       currentSelected = 2;
                     });
-                    _initAnimationAndStart(_positionAnimation.value, 1);
+                    _initAnimationAndStart();
                   }),
             ],
           ),
@@ -147,10 +116,8 @@ class _FancyTabBarState extends State<FancyTabBar>
     );
   }
 
-  _initAnimationAndStart(double from, double to) {
+  _initAnimationAndStart() {
     UpperCircleState.isFirst = true;
-    _positionTween.begin = from;
-    _positionTween.end = to;
 
     _animationController.reset();
     _fadeOutController.reset();

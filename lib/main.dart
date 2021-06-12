@@ -35,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        // backgroundColor: Color.fromARGB(255, 'ff', g, b),
         title: const Text("Tab Bar Animation"),
       ),
       bottomNavigationBar: FancyTabBar(),
