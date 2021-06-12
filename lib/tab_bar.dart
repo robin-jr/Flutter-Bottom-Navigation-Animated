@@ -1,6 +1,6 @@
+import 'package:bottom_navigation_animated/upper_circle.dart';
 import 'package:flutter/material.dart';
 import 'tab_item.dart';
-import 'package:vector_math/vector_math.dart' as vector;
 
 class FancyTabBar extends StatefulWidget {
   @override
@@ -16,6 +16,9 @@ class _FancyTabBarState extends State<FancyTabBar>
   late AnimationController _fadeOutController;
   late Animation<double> _fadeFabOutAnimation;
   late Animation<double> _fadeFabInAnimation;
+  late Animation<Offset> _slideDownAnimation;
+  late Animation<Offset> _slideUpAnimation;
+  late AnimationController _controller;
 
   double fabIconAlpha = 1;
   IconData nextIcon = Icons.search;
@@ -63,6 +66,25 @@ class _FancyTabBarState extends State<FancyTabBar>
           fabIconAlpha = _fadeFabInAnimation.value;
         });
       });
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..forward();
+    _slideDownAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.0),
+      end: const Offset(0, -1.0),
+    ).animate(CurvedAnimation(
+      curve: Curves.easeInCubic,
+      parent: _animationController,
+    ));
+    _slideUpAnimation = Tween<Offset>(
+      begin: const Offset(0, 1.0),
+      end: const Offset(0, 0.0),
+    ).animate(CurvedAnimation(
+      curve: Curves.easeInCubic,
+      parent: _animationController,
+    ));
   }
 
   @override
@@ -113,77 +135,14 @@ class _FancyTabBarState extends State<FancyTabBar>
                       currentSelected = 2;
                     });
                     _initAnimationAndStart(_positionAnimation.value, 1);
-                  })
+                  }),
             ],
           ),
         ),
-        IgnorePointer(
-          child: Container(
-            decoration: BoxDecoration(color: Colors.transparent),
-            child: Align(
-              heightFactor: 1,
-              alignment: Alignment(_positionAnimation.value, 0),
-              child: FractionallySizedBox(
-                widthFactor: 1 / 3,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 90,
-                      width: 90,
-                      child: ClipRect(
-                          clipper: HalfClipper(),
-                          child: Container(
-                            child: Center(
-                              child: Container(
-                                  width: 70,
-                                  height: 70,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 8)
-                                      ])),
-                            ),
-                          )),
-                    ),
-                    SizedBox(
-                        height: 70,
-                        width: 90,
-                        child: CustomPaint(
-                          painter: HalfPainter(),
-                        )),
-                    SizedBox(
-                      height: 60,
-                      width: 60,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: PURPLE,
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 5,
-                                style: BorderStyle.none)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Opacity(
-                            opacity: fabIconAlpha,
-                            child: Icon(
-                              activeIcon,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        if (currentSelected == 0) UpperCircle(Icons.home, fabIconAlpha, -0.85),
+        if (currentSelected == 1)
+          UpperCircle(Icons.search, fabIconAlpha, -0.01),
+        if (currentSelected == 2) UpperCircle(Icons.person, fabIconAlpha, 0.85),
       ],
     );
   }
@@ -196,44 +155,5 @@ class _FancyTabBarState extends State<FancyTabBar>
     _fadeOutController.reset();
     _animationController.forward();
     _fadeOutController.forward();
-  }
-}
-
-class HalfClipper extends CustomClipper<Rect> {
-  @override
-  Rect getClip(Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height / 2);
-    return rect;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    return true;
-  }
-}
-
-class HalfPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Rect beforeRect = Rect.fromLTWH(0, (size.height / 2) - 10, 10, 10);
-    final Rect largeRect = Rect.fromLTWH(10, 0, size.width - 20, 70);
-    final Rect afterRect =
-        Rect.fromLTWH(size.width - 10, (size.height / 2) - 10, 10, 10);
-
-    final path = Path();
-    path.arcTo(beforeRect, vector.radians(0), vector.radians(90), false);
-    path.lineTo(20, size.height / 2);
-    path.arcTo(largeRect, vector.radians(0), -vector.radians(180), false);
-    path.moveTo(size.width - 10, size.height / 2);
-    path.lineTo(size.width - 10, (size.height / 2) - 10);
-    path.arcTo(afterRect, vector.radians(180), vector.radians(-90), false);
-    path.close();
-
-    canvas.drawPath(path, Paint()..color = Colors.white);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
   }
 }
