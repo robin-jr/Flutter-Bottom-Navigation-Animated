@@ -50,72 +50,74 @@ class UpperCircleState extends State<UpperCircle>
       isFirst = false;
     }
     return IgnorePointer(
-      child: Container(
-        decoration: BoxDecoration(color: Colors.transparent),
-        child: Align(
-          heightFactor: 1,
-          alignment: Alignment(widget.position, 0),
-          child: FractionallySizedBox(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 90,
-                  width: 90,
-                  child: ClipRect(
-                      clipper: HalfClipper(),
-                      child: Container(
-                        child: Center(
-                          child: Container(
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12, blurRadius: 8)
-                                  ])),
-                        ),
-                      )),
-                ),
-                SizedBox(
-                    height: 70,
+        child: Container(
+      decoration: BoxDecoration(color: Colors.transparent),
+      child: Align(
+        heightFactor: 1,
+        alignment: Alignment(widget.position, 0),
+        child: FractionallySizedBox(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 90,
+                width: 90,
+                // child: ClipRect(
+                //     clipper: HalfClipper(),
+                //     child: Container(
+                //       child: Center(
+                //         child: Container(
+                //             width: 70,
+                //             height: 70,
+                //             decoration: BoxDecoration(
+                //                 color: Colors.white,
+                //                 shape: BoxShape.circle,
+                //                 boxShadow: [
+                //                   BoxShadow(
+                //                       color: Colors.black12, blurRadius: 8)
+                //                 ])),
+                //       ),
+                //     )),
+              ),
+              Positioned(
+                bottom: _position - 25,
+                child: SizedBox(
+                    height: 90,
                     width: 90,
                     child: CustomPaint(
                       painter: HalfPainter(),
                     )),
-                Positioned(
-                    bottom: _position,
-                    child: SizedBox(
-                      height: 60,
-                      width: 60,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.purple,
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 5,
-                                style: BorderStyle.none)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Opacity(
-                            opacity: widget.fabIconAlpha,
-                            child: Icon(
-                              widget.icon,
+              ),
+              Positioned(
+                  bottom: _position,
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.purple,
+                          border: Border.all(
                               color: Colors.white,
-                            ),
+                              width: 5,
+                              style: BorderStyle.none)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Opacity(
+                          opacity: widget.fabIconAlpha,
+                          child: Icon(
+                            widget.icon,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    )),
-              ],
-            ),
+                    ),
+                  )),
+            ],
           ),
         ),
       ),
-    );
+    ));
   }
 }
 
